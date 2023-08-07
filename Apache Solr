@@ -1,0 +1,541 @@
+## Apache solr
+1. Creating Collection
+   * To create a collection,we need to start it.By default,it takes 8983 as port .If anyone wants to change it,can do it by -p parameter in below command
+   ```
+    bin/solr start -p 8655
+   ```
+   ### The output be 
+   ```
+   Waiting up to 180 seconds to see Solr running on port 8655 [-]  
+   Started Solr server on port 8655 (pid=31818). Happy searching!
+   ```
+   * To create a collection named techproducts
+   ```
+    bin/solr create -c techproducts
+   ``` 
+   ### The output 
+    ```
+         Created new core 'techproducts'
+    ```
+2. Indexing the data 
+
+   * For basic operations to be done,we require a data in collection.Now uploading films.json 
+   ```  
+   bin/post -c techproducts example/films/films.json
+   ```  
+   here the example/films/films.jsonfilepath is location of file 
+
+3. Basic querying
+
+  ```
+   curl "http://localhost:8983/solr/techproducts/select?indent=on&q=*:*" 
+   ```
+   This produces 10 rows content in it as rows=10 is deafult value.
+   ### The ouput 
+   ```
+   {
+  "responseHeader":{
+    "status":0,
+    "QTime":0,
+    "params":{
+      "q":"*:*",
+      "indent":"on"}},
+  "response":{"numFound":1100,"start":0,"numFoundExact":true,"docs":[
+      {
+        "id":"/en/45_2006",
+        "directed_by":["Gary Lennon"],
+        "initial_release_date":["2006-11-30T00:00:00Z"],
+        "genre":["Black comedy",
+          "Thriller",
+          "Psychological thriller",
+          "Indie film",
+          "Action Film",
+          "Crime Thriller",
+          "Crime Fiction",
+          "Drama"],
+        "name":".45",
+        "_version_":1697014628475731968},
+      {
+        "id":"/en/9_2005",
+        "directed_by":["Shane Acker"],
+        "initial_release_date":["2005-04-21T00:00:00Z"],
+        "genre":["Computer Animation",
+          "Animation",
+          "Apocalyptic and post-apocalyptic fiction",
+          "Science Fiction",
+          "Short Film",
+          "Thriller",
+          "Fantasy"],
+        "name":"9",
+        "_version_":1697014628504043520},
+      {
+        "id":"/en/69_2004",
+        "directed_by":["Lee Sang-il"],
+        "initial_release_date":["2004-07-10T00:00:00Z"],
+        "genre":["Japanese Movies",
+          "Drama"],
+        "name":"69",
+        "_version_":1697014628511383552},
+      {
+        "id":"/en/300_2007",
+        "directed_by":["Zack Snyder"],
+        "initial_release_date":["2006-12-09T00:00:00Z"],
+        "genre":["Epic film",
+          "Adventure Film",
+          "Fantasy",
+          "Action Film",
+          "Historical fiction",
+          "War film",
+          "Superhero movie",
+          "Historical Epic"],
+        "name":"300",
+        "_version_":1697014628516626432},
+      {
+        "id":"/en/2046_2004",
+        "directed_by":["Wong Kar-wai"],
+        "initial_release_date":["2004-05-20T00:00:00Z"],
+        "genre":["Romance Film",
+          "Fantasy",
+          "Science Fiction",
+          "Drama"],
+        "name":"2046",
+        "_version_":1697014628525015040},
+      {
+        "id":"/en/quien_es_el_senor_lopez",
+        "directed_by":["Luis Mandoki"],
+        "genre":["Documentary film"],
+        "name":"¿Quién es el señor López?",
+        "_version_":1697014628530257920},
+      {
+        "id":"/en/weird_al_yankovic_the_ultimate_video_collection",
+        "directed_by":["Jay Levey",
+          "\"Weird Al\" Yankovic"],
+        "initial_release_date":["2003-11-04T00:00:00Z"],
+        "genre":["Music video",
+          "Parody"],
+        "name":"\"Weird Al\" Yankovic: The Ultimate Video Collection",
+        "_version_":1697014628535500800},
+      {
+        "id":"/en/15_park_avenue",
+        "directed_by":["Aparna Sen"],
+        "initial_release_date":["2005-10-27T00:00:00Z"],
+        "genre":["Art film",
+          "Romance Film",
+          "Musical",
+          "Drama",
+          "Musical Drama"],
+        "name":"15 Park Avenue",
+        "_version_":1697014628540743680},
+      {
+        "id":"/en/2_fast_2_furious",
+        "directed_by":["John Singleton"],
+        "initial_release_date":["2003-06-03T00:00:00Z"],
+        "genre":["Thriller",
+          "Action Film",
+          "Crime Fiction"],
+        "name":"2 Fast 2 Furious",
+        "_version_":1697014628555423744},
+      {
+        "id":"/en/7g_rainbow_colony",
+        "directed_by":["Selvaraghavan"],
+        "initial_release_date":["2004-10-15T00:00:00Z"],
+        "genre":["Drama"],
+        "name":"7G Rainbow Colony",
+        "_version_":1697014628569055232}]
+  }}
+  ```
+   
+   a. For Phrase Search
+   Here we search the phrase "Action Film"
+   ``` 
+   curl "http://localhost:8983/solr/techproducts/select?q=\"Action+Film\"" 
+   ```
+   ### The output
+   ```
+   response":{"numFound":10,"start":0,"numFoundExact":true,"docs":[
+      {
+        "id":"/en/45_2006",
+        "directed_by":["Gary Lennon"],
+        "initial_release_date":["2006-11-30T00:00:00Z"],
+        "genre":["Black comedy",
+          "Thriller",
+          "Psychological thriller",
+          "Indie film",
+          "Action Film",
+          "Crime Thriller",
+          "Crime Fiction",
+          "Drama"],
+        "name":".45",
+        "_version_":1697014628475731968},
+      {
+        "id":"/en/300_2007",
+        "directed_by":["Zack Snyder"],
+        "initial_release_date":["2006-12-09T00:00:00Z"],
+        "genre":["Epic film",
+          "Adventure Film",
+          "Fantasy",
+          "Action Film",
+          "Historical fiction",
+          "War film",
+          "Superhero movie",
+          "Historical Epic"],
+        "name":"300",
+        "_version_":1697014628516626432},
+      {
+        "id":"/en/2_fast_2_furious",
+        "directed_by":["John Singleton"],
+        "initial_release_date":["2003-06-03T00:00:00Z"],
+        "genre":["Thriller",
+          "Action Film",
+          "Crime Fiction"],
+        "name":"2 Fast 2 Furious",
+        "_version_":1697014628555423744},
+   }}
+   ```
+   
+   In the q parameter in curl,the words in phrase are combine d with + and they are closed in quotes
+
+  b. Combine Searches
+    
+    
+   ```  
+     curl "http://localhost:8983/solr/techproducts/select?q=%2Belectronics+-music" 
+    
+  ```
+  
+  To allow for search, use + or %2B and - for disallowing
+
+
+4. Deletion and stop 
+  Deleting the techproducts collection
+   ```
+    bin/solr delete -c techproducts
+   ```
+  ### The output
+  ```
+  Deleting core 'techproducts' using command:
+http://localhost:8655/solr/admin/cores?action=UNLOAD&core=collection1&deleteIndex=true&deleteDataDir=true&deleteInstanceDir=true
+```
+   (collection name)  -- to delete
+
+   bin/solr stop -all --- to stop
+
+5. ### Zookeeper
+    #### Importance of Zookeeper
+
+    *  Zookeepers are a central repository for SolrCloud configuration. You can consider it as a distributed filesystem which can be accessed by all Solr nodes in the cluster. So if you change any config file you just need to inform or upload it to Zookeeper and not on every node in the cluster.
+
+    * One more important responsibility of Zookeeper is to keep an eye on the state of all Solr nodes in the cluster. If any node goes down and a search request comes in for that node, Zookeeper routes it to an alternative replica node.
+   * for zookeeper to be in action in our pc,we need to create odd number of instances of zookeeper in three folders.Again create data and log folders for each of three zookeeper nodes
+
+   * In each of instance,we need to edit the zoo.cfg for managing the solr.In the each of instance/conf/zoo.cfg, add the below contents
+   ```
+    initLimit=10
+     syncLimit=5
+     datadir=/data
+     dataLogDir=/log
+     clientPort=2181
+     server.1=localhost:2888:3888
+     server.2=localhost:2889:3889
+     server.3=localhost:2890:3890
+   ```
+   client port -represents the port of this node
+
+   dataDir- it represents the location where data is located
+
+   dataLogDir - it represents the location where logs are located
+   
+   Now all are set. We need to start the zookeeper in each of instances
+
+   in bin, we have zkServer.sh for every instance
+
+   so use the below command to start
+   ```
+    ./zkServer.sh start 
+   ```
+  ### The output
+  ```
+   /usr/bin/java
+ZooKeeper JMX enabled by default
+Using config: /home/isadmin/zookeeper/instances/instance2/bin/../conf/zoo.cfg
+Starting zookeeper ... STARTED
+```
+
+   ### Uploading configs and collections to zookeeper
+
+   
+   We need to upload from cloud-scripts loaction to zookeeper
+   ```
+   SOLR_HOME/server/scripts/cloud-scripts# ./zkcli.sh -zkhost localhost:2181,localhost:2182,localhost:2183 -cmd upconfig -confdir SOLR_HOME/example/files/conf -confname conf1
+   ```
+   ### The output
+   ```
+   INFO  - 2021-04-14 04:18:12.289; org.apache.solr.common.cloud.ConnectionManager; Waiting for client to connect to ZooKeeper
+INFO  - 2021-04-14 04:18:12.375; org.apache.solr.common.cloud.ConnectionManager; zkClient has connected
+INFO  - 2021-04-14 04:18:12.376; org.apache.solr.common.cloud.ConnectionManager; Client is connected to ZooKeeper
+   ```
+   upconfig - upload the configurtion
+
+   linkconfig - to link the collection
+
+### Connecting to Zookeeper to check content
+
+  
+  Type the below command in any of instance of zookeeper
+  ```
+  .zkCli.sh -server localhost:2181
+  ```
+  2181 is the respective port number
+
+  use ./zkCli.sh -server hostname:portnumber in anyone instance to check the uploaded content in zookeeper
+  ### The output
+  ```
+  Welcome to ZooKeeper!
+2021-04-14 04:23:29,830 [myid:localhost:2181] - INFO  [main-SendThread(localhost:2181):ClientCnxn$SendThread@1181] - Opening socket connection to server localhost/0:0:0:0:0:0:0:1:2181.
+2021-04-14 04:23:29,831 [myid:localhost:2181] - INFO  [main-SendThread(localhost:2181):ClientCnxn$SendThread@1183] - SASL config status: Will not attempt to authenticate using SASL (unknown error)
+JLine support is enabled
+2021-04-14 04:23:29,847 [myid:localhost:2181] - INFO  [main-SendThread(localhost:2181):ClientCnxn$SendThread@1013] - Socket connection established, initiating session, client: /0:0:0:0:0:0:0:1:38250, server: localhost/0:0:0:0:0:0:0:1:2181
+2021-04-14 04:23:29,866 [myid:localhost:2181] - INFO  [main-SendThread(localhost:2181):ClientCnxn$SendThread@1448] - Session establishment complete on server localhost/0:0:0:0:0:0:0:1:2181, session id = 0x104b52878550002, negotiated timeout = 30000
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+[zk: localhost:2181(CONNECTED) 0] ls /
+[collections, configs, zookeeper]
+```
+> ls /
+* In the above,we type ls / to see the content
+
+ ```
+ bin/solr zk cp file:/usr/src/solr-8.6.0/server/solr/solr.xml zk:/solr.xml -z localhost:2181
+ ```
+  * In the above,the solr.xml file is uploaded to zookeeper as an example where sometimes some files are necessary before solr start first time
+   * This makes the file available to every nodes solr_home directory
+
+
+6. ### SolrCloud
+
+
+It will prompt for asking number of nodes and their port number when we run 
+```
+bin/solr start -e cloud
+``` 
+## The output seems to be : 
+
+   > Welcome to the SolrCloud example!
+
+     This interactive session will help you launch a SolrCloud cluster on your local workstation.
+
+     To begin, how many Solr nodes would you like to run in your local cluster? (specify 1-4 nodes) [2]:
+
+     Ok, let's start up 2 Solr nodes for your example SolrCloud cluster.
+     Please enter the port for node1 [8983]:
+   
+     Please enter the port for node2 [7574]:
+
+
+     Starting up 2 Solr nodes for your example SolrCloud cluster.
+
+     Creating Solr home directory /solr-8.6.0/example/cloud/node1/solr
+     Cloning /solr-8.6.0/example/cloud/node1 into
+     /solr-8.6.0/example/cloud/node2
+
+      Starting up Solr on port 8983 using command:
+      "bin/solr" start -cloud -p 8983 -s "example/cloud/node1/solr"
+
+      Waiting up to 180 seconds to see Solr running on port 8983 [\]
+      Started Solr server on port 8983 (pid=34942). Happy searching!
+
+
+      Now let's create a new collection for indexing documents in your 2-node cluster.
+      Please provide a name for your new collection: [gettingstarted]
+      ## we take techproducts as collection
+
+      How many shards would you like to split techproducts into? [2]
+
+      How many replicas per shard would you like to create? [2]
+
+      Please choose a configuration for the techproducts collection, available options are:
+      _default or sample_techproducts_configs [_default]
+
+
+for indexing the data in collection techproducts, use 
+```
+ bin/post -c techproucts example/films/films.json ,
+```
+### The output: 
+ ``` 
+ java -classpath /home/isadmin/solr-8.6.0/dist/solr-core-8.6.0.jar -Dauto=yes -Dport=8991 -Dc=films -Ddata=files org.apache.solr.util.SimplePostTool example/films/films.json
+SimplePostTool version 5.0.0
+Posting files to [base] url http://localhost:8991/solr/films/update...
+Entering auto mode. File endings considered are xml,json,jsonl,csv,pdf,doc,docx,ppt,pptx,xls,xlsx,odt,odp,ods,ott,otp,ots,rtf,htm,html,txt,log
+POSTing file films.json (application/json) to [base]/json/docs
+1 files indexed.
+COMMITting Solr index changes to http://localhost:8991/solr/films/update...
+Time spent: 0:00:02.362
+```
+
+The documents are in a mix of document formats (JSON, CSV, etc.),and fortunately we can index them all at once.
+
+7. ## Sharded Collection
+
+ ``` 
+ curl "http://localhost:8983/solr/admin/collections?action=CREATE&name=techproducts&numShards=2&replicationFactor=1&wt=xml"   
+ ```
+ This curl command is used to create a sharded collection with number of replication and number of shards that are required
+ ### The output
+ ``` 
+ <?xml version="1.0" encoding="UTF-8"?>
+<response>
+
+<lst name="responseHeader">
+  <int name="status">0</int>
+  <int name="QTime">3134</int>
+</lst>
+<lst name="success">
+  <lst name="127.0.1.1:8984_solr">
+    <lst name="responseHeader">
+      <int name="status">0</int>
+      <int name="QTime">2018</int>
+    </lst>
+    <str name="core">techproducts_shard1_replica_n1</str>
+  </lst>
+  <lst name="127.0.1.1:8983_solr">
+    <lst name="responseHeader">
+      <int name="status">0</int>
+      <int name="QTime">2016</int>
+    </lst>
+    <str name="core">techproducts_shard2_replica_n2</str>
+  </lst>
+</lst>
+```
+
+ * For indexing the data,i need to define the field in schema.xml by Schema API
+
+ ```
+ curl -X POST -H 'Content-type:application/json' --data-binary '{"add-field": {"name":"name", "type":"text_general", "multiValued":false, "stored":true}}' http://localhost:8983/solr/films/schema
+ ```
+ ## The output
+
+ ```
+ {
+  "responseHeader":{
+    "status":0,
+    "QTime":1081}}
+````
+
+ This command uses the Schema API to explicitly define a field named "name" that has the field type "text_general" (a text field). It will not be permitted to have multiple values, but it will be stored (meaning it can be retrieved by queries)
+
+* Then index the data by
+```
+    bin/post -c films example/films/films.json
+```
+### The output
+```
+java -classpath /root/solr-8.6.0/dist/solr-core-8.6.0.jar -Dauto=yes -Dport=8983 -Dc=techproducts -Ddata=files org.apache.solr.util.SimplePostTool example/films/films.json
+SimplePostTool version 5.0.0
+Posting files to [base] url http://localhost:8655/solr/techproducts/update...
+Entering auto mode. File endings considered are xml,json,jsonl,csv,pdf,doc,docx,ppt,pptx,xls,xlsx,odt,odp,ods,ott,otp,ots,rtf,htm,html,txt,log
+POSTing file films.json (application/json) to [base]/json/docs
+1 files indexed.
+```
+
+   ### Indexing only to specific shards
+
+   * The router name that will be used. The router defines how documents will be distributed among the shards. Possible values are implicit or compositeId, which is the default.
+
+   * The implicit router does not automatically route documents to different shards. Whichever shard you indicate on the indexing request (or within each document) will be used as the destination for those documents.
+
+   * The compositeId router hashes the value in the uniqueKey field and looks up that hash in the collection’s clusterstate to determine which shard will receive the document, with the additional ability to manually direct the routing.
+
+   * When using the implicit router, the shards parameter is required. When using the compositeId router, the numShards parameter is required.
+     ```
+      http://localhost:8984/solr/admin/collections?action=CREATE&name=techproducts&numShards=2&router.name=compositeId&numShards=2&shards=shard1&router.field='name'&wt=xml"
+     ```
+  *  When we specify the shards=shard1,the index occurs only to shard1 only when we post the data to collection
+
+8. ### Faceting
+
+By faceting with field genre in films
+ ```
+  curl "http://localhost:8983/solr/techproducts/select?q=*:*&rows=0&facet=true&facet.field=genre_str"
+```
+### The output
+  > 
+      {
+
+     "responseHeader":{
+    "zkConnected":true,
+    "status":0,
+    "QTime":11,
+    "params":{
+      "q":"*:*",
+      "facet.field":"genre_str",
+      "rows":"0",
+      "facet":"true"}},
+    "response":{"numFound":1100,"start":0,
+    "maxScore":1.0,"docs":[]
+    },
+    "facet_counts":{
+    "facet_queries":{},
+    "facet_fields":{
+      "genre_str":[
+        "Drama",552,
+        "Comedy",389,
+        "Romance Film",270,
+        "Thriller",259,
+        "Action Film",196,
+        "Crime Fiction",170,
+        "World cinema",167]},
+        "facet_ranges":{},
+        "facet_intervals":{},
+        "facet_heatmaps":{}}}
+
+ * To see facet counts from all documents (q=*:*): turn on faceting (facet=true), and specify the field to facet on via the facet.field parameter. If you only want facets, and no document contents, specify rows=0. The curl command below will return facet counts for the genre_str field
+
+9. ## Pivot Facet
+
+By pivot sfaceting with fields genre and directed_by in films 
+```
+curl "http://localhost:8983/solr/films/select?q=*:*&rows=0& facet=on&facet.pivot=genre_str,directed_by_str"
+```
+### The output : 
+>   
+    {
+    "responseHeader":{
+    
+    "zkConnected":true,
+    "status":0,
+    "QTime":1147,
+    "params":{
+      "q":"*:*",
+      "facet.pivot":"genre_str,directed_by_str",
+      "rows":"0",
+      "facet":"on"}},
+    "response":{"numFound":1100,"start":0,"maxScore":1.0,"docs":[]
+    },
+    "facet_counts":{
+    "facet_queries":{},
+    "facet_fields":{},
+    "facet_ranges":{},
+    "facet_intervals":{},
+    "facet_heatmaps":{},
+    "facet_pivot":{
+      "genre_str,directed_by_str":[{
+          "field":"genre_str",
+          "value":"Drama",
+          "count":552,
+          "pivot":[{
+              "field":"directed_by_str",
+              "value":"Ridley Scott",
+              "count":5},
+            {
+              "field":"directed_by_str",
+              "value":"Steven Soderbergh",
+              "count":5},
+            {
+              "field":"directed_by_str",
+              "value":"Michael Winterbottom",
+              "count":4}}]}]}}}
+
+* In the  ,pivot facets, also known as "decision trees", allowing two or more fields to be nested for all the various possible combinations. Using the films data, pivot facets can be used to see how many of the films in the "Drama" category (the genre_str field) are directed by a director
